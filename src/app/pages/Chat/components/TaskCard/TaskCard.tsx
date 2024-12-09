@@ -16,6 +16,7 @@ import { Button } from '@/components/ui/button';
 import React, { useState } from 'react';
 import { useTasksStore } from '../../useTasksStore';
 import { ru } from 'chrono-node';
+import { useForm, Controller } from 'react-hook-form';
 
 type TaskProps = {
   task: Task;
@@ -25,13 +26,23 @@ const TaskCard: React.FC<TaskProps> = observer(({ task }) => {
   const dateTime = DateTime.fromFormat(task.date, 'yyyy-MM-dd HH:mm').setLocale('ru');
   const formattedDate = dateTime.toFormat('dd MMMM HH:mm');
   const [isEditing, setIsEditing] = useState(false);
-  const [editedMessage, setEditedMessage] = useState(task.message);
-  const [editedDateInput, setEditedDateInput] = useState(formattedDate);
 
   const { updateTask } = useTasksStore();
 
-  const handleSave = () => {
-    const parsed = ru.parse(editedDateInput);
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+  } = useForm({
+    defaultValues: {
+      message: task.message,
+      date: formattedDate,
+    },
+  });
+
+  const handleSave = (data: { message: string; date: string }) => {
+    const parsed = ru.parse(data.date);
     const backendFormatDate =
       parsed.length > 0 ? DateTime.fromJSDate(parsed[0].start.date()).toFormat('yyyy-MM-dd HH:mm') : task.date;
 
@@ -40,14 +51,12 @@ const TaskCard: React.FC<TaskProps> = observer(({ task }) => {
         ? DateTime.fromJSDate(parsed[0].start.date()).setLocale('ru').toFormat('dd MMMM HH:mm')
         : formattedDate;
 
-    setEditedDateInput(displayFormatDate);
-    updateTask(task.id, editedMessage, backendFormatDate);
+    setValue('date', displayFormatDate);
+    updateTask(task.id, data.message, backendFormatDate);
     setIsEditing(false);
   };
 
   const handleCancel = () => {
-    setEditedMessage(task.message);
-    setEditedDateInput(formattedDate);
     setIsEditing(false);
   };
 
@@ -67,24 +76,33 @@ const TaskCard: React.FC<TaskProps> = observer(({ task }) => {
           <LucideChevronRight />
         </div>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="max-w-sm">
         <DialogHeader className="flex max-w-sm">
           {isEditing ? (
             <>
               <p className="flex text-gray-400">Задача</p>
-              <input
-                type="text"
-                value={editedMessage}
-                onChange={(e) => setEditedMessage(e.target.value)}
-                className="w-full p-2 border border-gray-300 rounded mb-2"
+              <Controller
+                name="message"
+                control={control}
+                rules={{ required: 'Это поле обязательно' }}
+                render={({ field }) => (
+                  <input type="text" {...field} className="w-full p-2 border border-gray-300 rounded mb-2" />
+                )}
               />
+              {errors.message && <span className="flex text-red-400 text-sm">{errors.message.message}</span>}
+
               <p className="flex text-gray-400">Дата</p>
-              <input
-                type="text"
-                value={editedDateInput}
-                onChange={(e) => setEditedDateInput(e.target.value)}
-                className="w-full p-2 border border-gray-300 rounded"
+              <Controller
+                name="date"
+                control={control}
+                rules={{
+                  required: 'Это поле обязательно',
+                }}
+                render={({ field }) => (
+                  <input type="text" {...field} className="w-full p-2 border border-gray-300 rounded" />
+                )}
               />
+              {errors.date && <span className="flex text-red-400 text-sm">{errors.date.message}</span>}
             </>
           ) : (
             <>
@@ -99,11 +117,16 @@ const TaskCard: React.FC<TaskProps> = observer(({ task }) => {
               <Button
                 className="w-full bg-blue-500 border-blue-500 active:bg-blue-800 hover:bg-blue-700"
                 type="button"
-                onClick={handleSave}
+                onClick={handleSubmit(handleSave)}
               >
                 Сохранить
               </Button>
-              <Button className="w-full border-blue-500" type="button" variant="outline" onClick={handleCancel}>
+              <Button
+                className="w-full border-blue-500 text-blue-500"
+                type="button"
+                variant="outline"
+                onClick={handleCancel}
+              >
                 Отменить
               </Button>
             </>
@@ -117,7 +140,7 @@ const TaskCard: React.FC<TaskProps> = observer(({ task }) => {
                 Изменить
               </Button>
               <DialogClose asChild>
-                <Button className="w-full border-blue-500" type="button" variant="outline">
+                <Button className="w-full border-blue-500 text-blue-500" type="button" variant="outline">
                   Закрыть
                 </Button>
               </DialogClose>

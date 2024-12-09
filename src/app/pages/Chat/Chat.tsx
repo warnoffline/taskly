@@ -4,6 +4,7 @@ import { withProvider } from '@/hoc/withProvider';
 import { TasksStoreProvider, useTasksStore } from './useTasksStore';
 import { DataType } from '@/types/task';
 import TasksList from './components/TasksList/TasksList';
+import { useToast } from '@/hooks/use-toast';
 
 const Chat = observer(() => {
   const { register, handleSubmit, reset, watch } = useForm({
@@ -12,10 +13,22 @@ const Chat = observer(() => {
     },
   });
   const { addTask } = useTasksStore();
+  const { toast } = useToast();
 
-  const onSubmit = (data: DataType) => {
-    addTask(data.message);
-    reset();
+  const onSubmit = async (data: DataType) => {
+    try {
+      if (!data.message.trim()) {
+        throw new Error('Сообщение не может быть пустым.');
+      }
+      await addTask(data.message);
+      reset();
+    } catch (error) {
+      toast({
+        title: 'Ошибка',
+        description: error instanceof Error ? error.message : 'Неизвестная ошибка',
+        variant: 'destructive',
+      });
+    }
   };
 
   const message = watch('message');
@@ -27,7 +40,7 @@ const Chat = observer(() => {
         onSubmit={handleSubmit(onSubmit)}
       >
         <textarea
-          className="flex-1 border-none resize-none outline-none bg-gray-200 rounded-lg px-3 py-2 text-sm"
+          className="flex-1 border-none resize-none outline-none bg-gray-200 rounded-lg px-3 py-3 text-sm"
           rows={1}
           style={{
             maxHeight: '150px', // Ограничиваем высоту
@@ -38,7 +51,7 @@ const Chat = observer(() => {
         />
         <button
           type="submit"
-          className={`bg-blue-500 text-white px-4 py-2 rounded-lg ${
+          className={`bg-blue-500 text-white px-4 py-3 rounded-lg ${
             message.trim() ? 'opacity-100' : 'opacity-50 pointer-events-none'
           }`}
         >

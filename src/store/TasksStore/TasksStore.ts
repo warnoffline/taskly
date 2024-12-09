@@ -5,15 +5,18 @@ import { ru } from 'chrono-node';
 import { DateTime } from 'luxon';
 import { v4 as uuidv4 } from 'uuid';
 
-type PrivateFields = '_tasks';
+type PrivateFields = '_tasks' | '_error';
 
 class TasksStore implements ILocalStore {
   private _tasks: Task[] = [];
+  private _error: string = '';
 
   constructor() {
     makeObservable<TasksStore, PrivateFields>(this, {
       _tasks: observable,
+      _error: observable,
       tasks: computed,
+      error: computed,
       addTask: action.bound,
       removeTask: action.bound,
       updateTask: action.bound,
@@ -26,28 +29,39 @@ class TasksStore implements ILocalStore {
     return this._tasks;
   }
 
+  get error() {
+    return this._error;
+  }
+
   addTask(message: string): void {
     const parsedDates = ru.parse(message);
-    console.log(parsedDates);
-    let cleanedMessage = message;
-    const extractedDates: string[] = [];
 
-    parsedDates.forEach((parsedDate) => {
-      const dateString = parsedDate.text;
-      const formattedDate = DateTime.fromJSDate(parsedDate.start.date()).toFormat('yyyy-MM-dd HH:mm');
-      extractedDates.push(formattedDate);
+    if (parsedDates.length > 0) {
+      let cleanedMessage = message;
+      const extractedDates: string[] = [];
 
-      cleanedMessage = cleanedMessage.replace(dateString, '').replace(/\s+/g, ' ').trim();
-    });
+      parsedDates.forEach((parsedDate) => {
+        const dateString = parsedDate.text;
+        const formattedDate = DateTime.fromJSDate(parsedDate.start.date()).toFormat('yyyy-MM-dd HH:mm');
+        extractedDates.push(formattedDate);
 
-    const newTask: Task = {
-      id: uuidv4(),
-      message: cleanedMessage,
-      date: extractedDates.length > 0 ? extractedDates[0] : '',
-    };
+        cleanedMessage = cleanedMessage.replace(dateString, '').replace(/\s+/g, ' ').trim();
+      });
 
-    this._tasks.push(newTask);
-    this.saveTasksToLocalStorage();
+      if (!cleanedMessage) {
+        throw new Error('Что нужно сделать в это время?');
+      }
+      const newTask: Task = {
+        id: uuidv4(),
+        message: cleanedMessage,
+        date: extractedDates.length > 0 ? extractedDates[0] : '',
+      };
+
+      this._tasks.push(newTask);
+      this.saveTasksToLocalStorage();
+    } else {
+      throw new Error('Неправильная дата');
+    }
   }
 
   removeTask(id: string): void {
