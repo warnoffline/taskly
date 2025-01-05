@@ -5,18 +5,15 @@ import { ru } from 'chrono-node';
 import { DateTime } from 'luxon';
 import { v4 as uuidv4 } from 'uuid';
 
-type PrivateFields = '_tasks' | '_error';
+type PrivateFields = '_tasks';
 
 class TasksStore implements ILocalStore {
   private _tasks: Task[] = [];
-  private _error: string = '';
 
   constructor() {
     makeObservable<TasksStore, PrivateFields>(this, {
       _tasks: observable,
-      _error: observable,
       tasks: computed,
-      error: computed,
       addTask: action.bound,
       removeTask: action.bound,
       updateTask: action.bound,
@@ -26,11 +23,11 @@ class TasksStore implements ILocalStore {
   }
 
   get tasks() {
-    return this._tasks;
-  }
-
-  get error() {
-    return this._error;
+    return [...this._tasks].sort((a, b) => {
+      const dateA = DateTime.fromFormat(a.date, 'yyyy-MM-dd HH:mm');
+      const dateB = DateTime.fromFormat(b.date, 'yyyy-MM-dd HH:mm');
+      return dateA < dateB ? -1 : 1;
+    });
   }
 
   addTask(message: string): void {
@@ -57,6 +54,10 @@ class TasksStore implements ILocalStore {
         date: extractedDates.length > 0 ? extractedDates[0] : '',
       };
 
+      if (this.checkIfDatePassed(newTask.date)) {
+        throw new Error('Дата задачи уже прошла');
+      }
+
       this._tasks.push(newTask);
       this.saveTasksToLocalStorage();
     } else {
@@ -76,6 +77,9 @@ class TasksStore implements ILocalStore {
         task.message = message.trim();
       }
       if (date !== undefined) {
+        if (this.checkIfDatePassed(date)) {
+          throw new Error('Дата задачи уже прошла');
+        }
         task.date = date.trim();
       }
     }
@@ -89,8 +93,15 @@ class TasksStore implements ILocalStore {
   private loadTasksFromLocalStorage(): void {
     const savedTasks = localStorage.getItem('tasks');
     if (savedTasks) {
-      this._tasks = JSON.parse(savedTasks);
+      this._tasks = JSON.parse(savedTasks).filter((task: Task) => {
+        return !this.checkIfDatePassed(task.date);
+      });
     }
+  }
+
+  private checkIfDatePassed(date: string): boolean {
+    const taskDate = DateTime.fromFormat(date, 'yyyy-MM-dd HH:mm');
+    return taskDate < DateTime.local();
   }
 
   destroy(): void {}

@@ -17,6 +17,7 @@ import React, { useState } from 'react';
 import { useTasksStore } from '../../useTasksStore';
 import { ru } from 'chrono-node';
 import { useForm, Controller } from 'react-hook-form';
+import { checkIfDatePassed } from '@/utils/checkIfDatePassed';
 
 type TaskProps = {
   task: Task;
@@ -45,14 +46,15 @@ const TaskCard: React.FC<TaskProps> = observer(({ task }) => {
     const parsed = ru.parse(data.date);
     const backendFormatDate =
       parsed.length > 0 ? DateTime.fromJSDate(parsed[0].start.date()).toFormat('yyyy-MM-dd HH:mm') : task.date;
+    if (!checkIfDatePassed(backendFormatDate)) {
+      const displayFormatDate =
+        parsed.length > 0
+          ? DateTime.fromJSDate(parsed[0].start.date()).setLocale('ru').toFormat('dd MMMM HH:mm')
+          : formattedDate;
 
-    const displayFormatDate =
-      parsed.length > 0
-        ? DateTime.fromJSDate(parsed[0].start.date()).setLocale('ru').toFormat('dd MMMM HH:mm')
-        : formattedDate;
-
-    setValue('date', displayFormatDate);
-    updateTask(task.id, data.message, backendFormatDate);
+      setValue('date', displayFormatDate);
+      updateTask(task.id, data.message, backendFormatDate);
+    }
     setIsEditing(false);
   };
 

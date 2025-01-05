@@ -43,8 +43,8 @@ const Chat = observer(() => {
           className="flex-1 border-none resize-none outline-none bg-gray-200 rounded-lg px-3 py-3 text-sm"
           rows={1}
           style={{
-            maxHeight: '150px', // Ограничиваем высоту
-            overflowY: 'auto', // Прокрутка для длинных сообщений
+            maxHeight: '150px',
+            overflowY: 'auto',
           }}
           placeholder="Введите сообщение"
           {...register('message', { required: true })}

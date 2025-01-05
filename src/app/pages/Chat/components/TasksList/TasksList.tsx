@@ -4,7 +4,7 @@ import TaskCard from '../TaskCard/TaskCard';
 
 const TasksList = observer(() => {
   const { tasks } = useTasksStore();
-
+  console.log(tasks);
   return (
     <div className="w-full flex justify-center">
       <div className="w-center flex flex-col gap-5 pt-5 pb-20">
