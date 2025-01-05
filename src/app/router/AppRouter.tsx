@@ -1,13 +1,14 @@
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 import RootLayout from '../layout/RootLayout';
 import { ROUTES } from '@/configs/routeConfig';
+import { useUserStore } from '@/store/RootStore';
 
 import { Suspense } from 'react';
 import { AuthLazy, ChatLazy, ProfileLazy, SettingsLazy } from '../pages';
 import ProtectedRoute from './ProtectedRoute';
 
 const RouterComponent = () => {
-  const isAuthenticated = true;
+  const { isAuthenticated } = useUserStore();
   const router = createBrowserRouter([
     {
       path: '/',

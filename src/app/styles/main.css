@@ -75,3 +75,8 @@ body {
 .w-center {
   width: calc(100% - 20px);
 }
+
+.title {
+  font-size: 32px;
+  font-weight: 600;
+}
