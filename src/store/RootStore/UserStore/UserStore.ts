@@ -12,6 +12,7 @@ type PrivateFields = '_loading' | '_error' | '_user' | '_isAuthenticated';
 
 class UserStore {
   private _user: string = '';
+  private _uid: string = '';
   private _loading: boolean = false;
   private _error: string | null = null;
   private _isAuthenticated: boolean = false;
@@ -42,6 +43,10 @@ class UserStore {
     return this._user;
   }
 
+  get uid() {
+    return this._uid;
+  }
+
   get loading() {
     return this._loading;
   }
@@ -58,10 +63,11 @@ class UserStore {
     this._loading = true;
     this._error = null;
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      const user = await createUserWithEmailAndPassword(auth, email, password);
       runInAction(() => {
         this._isAuthenticated = true;
         this._user = email;
+        this._uid = user.user.uid;
       });
 
       this.saveToLocalStorage();
@@ -78,10 +84,11 @@ class UserStore {
     this._loading = true;
     this._error = null;
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const user = await signInWithEmailAndPassword(auth, email, password);
       runInAction(() => {
         this._isAuthenticated = true;
         this._user = email;
+        this._uid = user.user.uid;
       });
 
       this.saveToLocalStorage();
@@ -131,6 +138,7 @@ class UserStore {
       runInAction(() => {
         this._isAuthenticated = false;
         this._user = '';
+        this._uid = '';
       });
       this.removeFromLocalStorage();
     } catch (err) {
@@ -164,19 +172,25 @@ class UserStore {
   }
 
   private saveToLocalStorage(): void {
-    localStorage.setItem('user', this._user);
+    const data = {
+      user: this._user,
+      uid: this._uid,
+    };
+    localStorage.setItem('userItem', JSON.stringify(data));
   }
 
   private loadFromLocalStorage(): void {
-    const savedData = localStorage.getItem('user');
+    const userData = localStorage.getItem('userItem');
+    const savedData = userData && JSON.parse(userData);
     if (savedData) {
-      this._user = savedData;
+      this._user = savedData.user;
+      this._uid = savedData.uid;
       this._isAuthenticated = true;
     }
   }
 
   private removeFromLocalStorage(): void {
-    localStorage.removeItem('user');
+    localStorage.removeItem('userItem');
   }
 }
 

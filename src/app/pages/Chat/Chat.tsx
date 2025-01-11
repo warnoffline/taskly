@@ -1,10 +1,12 @@
 import { useForm } from 'react-hook-form';
 import { observer } from 'mobx-react-lite';
 import { withProvider } from '@/hoc/withProvider';
-import { TasksStoreProvider, useTasksStore } from './useTasksStore';
+import { TasksStoreProvider } from './useTasksStore';
 import { DataType } from '@/types/task';
 import TasksList from './components/TasksList/TasksList';
 import { useToast } from '@/hooks/use-toast';
+import { useTasksStore } from './useTasksStore';
+import { useEffect } from 'react';
 
 const Chat = observer(() => {
   const { register, handleSubmit, reset, watch } = useForm({
@@ -12,8 +14,13 @@ const Chat = observer(() => {
       message: '',
     },
   });
-  const { addTask } = useTasksStore();
+  const { addTask, fetchTasks } = useTasksStore();
   const { toast } = useToast();
+
+  useEffect(() => {
+    fetchTasks();
+    console.log('some');
+  }, [fetchTasks]);
 
   const onSubmit = async (data: DataType) => {
     try {
@@ -21,6 +28,7 @@ const Chat = observer(() => {
         throw new Error('Сообщение не может быть пустым.');
       }
       await addTask(data.message);
+      console.log(data.message);
       reset();
     } catch (error) {
       toast({
