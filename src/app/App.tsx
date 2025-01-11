@@ -7,7 +7,9 @@ import { useUserStore } from '@/store/RootStore';
 function App() {
   const { uid } = useUserStore();
   useEffect(() => {
-    generateToken();
+    if (uid) {
+      generateToken();
+    }
   }, [uid]);
   return (
     <RootStoreProvider>

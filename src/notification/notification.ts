@@ -12,8 +12,9 @@ export const generateToken = async () => {
     const token = await getToken(messaging, {
       vapidKey: 'BLJqV4lkuPcOJlUuj_7nDyxYEOK2v9Vg3F2DZBDdgov-TTqG4FDkuIVNiN7D83Av9jA9L7JnE7prQNwAKsAtKXk',
     });
+    localStorage.setItem('token', token);
     axios
-      .post('http://138.124.4.98:5000//api/saveToken', {
+      .post('http://138.124.4.98:5000/api/saveToken', {
         token,
         userId: uid,
       })
