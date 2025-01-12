@@ -2,9 +2,7 @@ import { messaging } from '@/configs/firebaseConfig';
 import axios from 'axios';
 import { getToken } from 'firebase/messaging';
 import { action, computed, makeObservable, observable } from 'mobx';
-
-const vapidKey = import.meta.env.VITE_FIREBASE_VAPID_KEY;
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+import { vapidKey, apiBaseUrl } from '@/configs/firebaseConfig';
 
 type PrivateFields = '_uid';
 

@@ -14,6 +14,9 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
+export const vapidKey = import.meta.env.VITE_FIREBASE_VAPID_KEY;
+export const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 export const db = getFirestore(app);
