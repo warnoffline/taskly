@@ -19,7 +19,6 @@ const Chat = observer(() => {
 
   useEffect(() => {
     fetchTasks();
-    console.log('some');
   }, [fetchTasks]);
 
   const onSubmit = async (data: DataType) => {
@@ -28,7 +27,6 @@ const Chat = observer(() => {
         throw new Error('Сообщение не может быть пустым.');
       }
       await addTask(data.message);
-      console.log(data.message);
       reset();
     } catch (error) {
       toast({
@@ -44,11 +42,11 @@ const Chat = observer(() => {
     <div>
       <TasksList />
       <form
-        className="fixed bottom-0 w-full bg-gray-100 px-4 py-2 flex items-center gap-2 border-t border-gray-300"
+        className="fixed bottom-0 w-full bg-chatLight-header dark:bg-chatDark-header px-4 py-2 flex items-center gap-2 border-t border-gray-300"
         onSubmit={handleSubmit(onSubmit)}
       >
         <textarea
-          className="flex-1 border-none resize-none outline-none bg-gray-200 rounded-lg px-3 py-3 text-sm"
+          className="flex-1 border-none resize-none outline-none bg-chatLight-input dark:bg-chatDark-input rounded-lg px-3 py-3 text-sm"
           rows={1}
           style={{
             maxHeight: '150px',

@@ -34,11 +34,14 @@ const Form: React.FC<FormProps> = observer(({ title, handleClick }) => {
   const onSubmit: SubmitHandler<IFormInput> = (data) => handleClick(data.email, data.password);
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="max-w-md bg-white shadow-md rounded-lg p-6 space-y-6 text-start">
-      <h2 className="text-2xl font-semibold text-gray-800 text-center">{title}</h2>
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="max-w-md bg-chatLight-bg dark:bg-chatDark-bg shadow-md rounded-lg p-6 space-y-6 text-start"
+    >
+      <h2 className="text-2xl font-semibold text-chatLight-text dark:text-chatDark-text text-center">{title}</h2>
 
       <div className="flex flex-col space-y-1">
-        <label htmlFor="email" className="text-gray-700 font-medium ">
+        <label htmlFor="email" className="text-chatLight-secondaryText dark:text-chatDark-secondaryText font-medium ">
           Email
         </label>
         <input
@@ -46,13 +49,13 @@ const Form: React.FC<FormProps> = observer(({ title, handleClick }) => {
           type="email"
           placeholder="Введите почту"
           {...register('email')}
-          className="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          className="border border-gray-300 bg-chatLight-input dark:bg-chatDark-input rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
         />
         {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
       </div>
 
       <div className="flex flex-col space-y-1">
-        <label htmlFor="password" className="text-gray-700 font-medium">
+        <label htmlFor="password" className="text-chatLight-secondaryText dark:text-chatDark-secondaryText font-medium">
           Пароль
         </label>
         <input
@@ -60,7 +63,7 @@ const Form: React.FC<FormProps> = observer(({ title, handleClick }) => {
           type="password"
           placeholder="Введите пароль"
           {...register('password')}
-          className="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          className="border bg-chatLight-input dark:bg-chatDark-input border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
         />
         {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
       </div>

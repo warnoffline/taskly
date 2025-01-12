@@ -65,12 +65,12 @@ const TaskCard: React.FC<TaskProps> = observer(({ task }) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <div className="cursor-pointer flex w-full items-center justify-between active:bg-blue-100 hover:bg-blue-100">
+        <div className="cursor-pointer flex w-full items-center justify-between active:bg-blue-100 dark:active:bg-blue-950 dark:hover:bg-blue-950 hover:bg-blue-100">
           <div className="relative w-full flex gap-3">
             <div className="w-1 bg-blue-500"></div>
             <div className="flex flex-col">
               <div className="text-sm text-blue-500">{formattedDate}</div>
-              <div className="text-lg text-gray-800">
+              <div className="text-lg text-chatLight-text dark:text-chatDark-text">
                 <div className="w-full max-w-xs truncate overflow-hidden whitespace-nowrap">{task.message}</div>
               </div>
             </div>
@@ -88,7 +88,11 @@ const TaskCard: React.FC<TaskProps> = observer(({ task }) => {
                 control={control}
                 rules={{ required: 'Это поле обязательно' }}
                 render={({ field }) => (
-                  <input type="text" {...field} className="w-full p-2 border border-gray-300 rounded mb-2" />
+                  <input
+                    type="text"
+                    {...field}
+                    className="w-full p-2 border bg-chatLight-input dark:bg-chatDark-input rounded mb-2"
+                  />
                 )}
               />
               {errors.message && <span className="flex text-red-400 text-sm">{errors.message.message}</span>}
@@ -101,7 +105,11 @@ const TaskCard: React.FC<TaskProps> = observer(({ task }) => {
                   required: 'Это поле обязательно',
                 }}
                 render={({ field }) => (
-                  <input type="text" {...field} className="w-full p-2 border border-gray-300 rounded" />
+                  <input
+                    type="text"
+                    {...field}
+                    className="w-full p-2 border bg-chatLight-input dark:bg-chatDark-input rounded"
+                  />
                 )}
               />
               {errors.date && <span className="flex text-red-400 text-sm">{errors.date.message}</span>}
@@ -117,7 +125,7 @@ const TaskCard: React.FC<TaskProps> = observer(({ task }) => {
           {isEditing ? (
             <>
               <Button
-                className="w-full bg-blue-500 border-blue-500 active:bg-blue-800 hover:bg-blue-700"
+                className="w-full bg-blue-500 border-blue-500 dark:border-blue-800 active:bg-blue-800 hover:bg-blue-700"
                 type="button"
                 onClick={handleSubmit(handleSave)}
               >
@@ -135,7 +143,7 @@ const TaskCard: React.FC<TaskProps> = observer(({ task }) => {
           ) : (
             <>
               <Button
-                className="w-full bg-blue-500 border-blue-500 active:bg-blue-800 hover:bg-blue-700"
+                className="w-full bg-blue-500 border-blue-500 dark:border-blue-800 active:bg-blue-800 hover:bg-blue-700"
                 type="button"
                 onClick={() => setIsEditing(true)}
               >

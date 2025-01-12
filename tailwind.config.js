@@ -11,6 +11,24 @@ export default {
         sm: 'calc(var(--radius) - 4px)',
       },
       colors: {
+        chatLight: {
+          bg: '#F9FAFB', // Фон чата
+          header: '#FFFFFF', // Фон хедера
+          input: '#E5E7EB', // Поле ввода
+          bubbleIncoming: '#E4F3FF', // Входящие сообщения
+          bubbleOutgoing: '#D1FAE5', // Исходящие сообщения
+          text: '#1F2937', // Основной текст
+          secondaryText: '#6B7280', // Вторичный текст
+        },
+        chatDark: {
+          bg: '#18191A', // Фон чата
+          header: '#242526', // Фон хедера
+          input: '#3A3B3C', // Поле ввода
+          bubbleIncoming: '#2E4A63', // Входящие сообщения
+          bubbleOutgoing: '#3D7256', // Исходящие сообщения
+          text: '#E4E4E7', // Основной текст
+          secondaryText: '#A3A3A6', // Вторичный текст
+        },
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         card: {

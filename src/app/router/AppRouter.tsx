@@ -1,14 +1,13 @@
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 import RootLayout from '../layout/RootLayout';
 import { ROUTES } from '@/configs/routeConfig';
-import { useUserStore } from '@/store/RootStore';
-
 import { Suspense } from 'react';
 import { AuthLazy, ChatLazy, ProfileLazy, SettingsLazy } from '../pages';
 import ProtectedRoute from './ProtectedRoute';
 
 const RouterComponent = () => {
-  const { isAuthenticated } = useUserStore();
+  const isAuth = localStorage.getItem('user') ? true : false;
+
   const router = createBrowserRouter([
     {
       path: '/',
@@ -31,7 +30,7 @@ const RouterComponent = () => {
           element: <AuthLazy />,
         },
         {
-          element: <ProtectedRoute isAuthenticated={isAuthenticated} />,
+          element: <ProtectedRoute isAuthenticated={isAuth} />,
           children: [
             {
               path: ROUTES.profile,

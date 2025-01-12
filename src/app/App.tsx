@@ -1,19 +1,24 @@
 import { useEffect } from 'react';
 import RouterComponent from './router';
-import { RootStoreProvider } from '@/store/RootStore';
-import { generateToken } from '@/notification/notification';
+import { RootStoreProvider, useNotificationStore } from '@/store/RootStore';
 import { useUserStore } from '@/store/RootStore';
+import { ThemeProvider } from './providers/ThemeContext';
 
 function App() {
   const { uid } = useUserStore();
+  const { generateToken } = useNotificationStore();
+
   useEffect(() => {
     if (uid) {
       generateToken();
     }
-  }, [uid]);
+  }, [generateToken, uid]);
+
   return (
     <RootStoreProvider>
-      <RouterComponent />
+      <ThemeProvider>
+        <RouterComponent />
+      </ThemeProvider>
     </RootStoreProvider>
   );
 }

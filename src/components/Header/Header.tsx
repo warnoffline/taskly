@@ -6,7 +6,7 @@ const Header = () => {
     `transition-colors hover:stroke-blue-500 active:stroke-blue-700 ${isActive ? 'stroke-blue-700' : ''}`;
 
   return (
-    <div className="w-full flex justify-center sticky top-0 bg-gray-100 z-10 border-b py-1 border-gray-300">
+    <div className="w-full flex justify-center sticky top-0 bg-chatLight-header dark:bg-chatDark-header z-10 border-b py-1 border-gray-300">
       <div className="w-center flex justify-between py-3">
         <NavLink to={'/chat'}>{(isActive) => <AlarmClockCheckIcon className={getNavLinkClass(isActive)} />}</NavLink>
         <div className="flex gap-2">

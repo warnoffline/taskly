@@ -56,7 +56,7 @@ const Profile = observer(() => {
   };
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white rounded-lg">
+    <div className="max-w-md mx-auto p-6 bg-chatLight-bg dark:bg-chatDark-bg rounded-lg">
       <h2 className="text-2xl font-semibold mb-4">Профиль</h2>
 
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -65,12 +65,14 @@ const Profile = observer(() => {
             Ваша почта: <strong>{user}</strong>
           </p>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">Новый пароль</label>
+            <label className="block text-sm font-medium text-chatLight-secondaryText dark:text-chatDark-secondaryText">
+              Новый пароль
+            </label>
             <input
               type="password"
               placeholder="Введите новый пароль"
               {...register('newPassword')}
-              className={`mt-1 p-2 w-full border ${
+              className={`mt-1 p-2 w-full border bg-chatLight-input dark:bg-chatDark-input ${
                 errors.newPassword ? 'border-red-600' : 'border-gray-300'
               } rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500`}
             />

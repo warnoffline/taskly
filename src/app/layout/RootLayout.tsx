@@ -4,11 +4,11 @@ import { Toaster } from '@/components/ui/toaster';
 
 const RootLayout = () => {
   return (
-    <>
+    <div className="min-h-screen bg-chatLight-bg dark:bg-chatDark-bg">
       <Toaster />
       <Header />
       <Outlet />
-    </>
+    </div>
   );
 };
 

@@ -14,7 +14,7 @@ export const generateToken = async () => {
     });
     localStorage.setItem('token', token);
     axios
-      .post('https://taskly-service.ru/api/saveToken', {
+      .post('http://localhost:5000/api/saveToken', {
         token,
         userId: uid,
       })
@@ -24,7 +24,6 @@ export const generateToken = async () => {
       .catch((error) => {
         console.error('Error saving token:', error);
       });
-    console.log(token);
     return token;
   }
 };
