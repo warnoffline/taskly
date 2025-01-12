@@ -6,7 +6,7 @@ import { AuthLazy, ChatLazy, ProfileLazy, SettingsLazy } from '../pages';
 import ProtectedRoute from './ProtectedRoute';
 
 const RouterComponent = () => {
-  const isAuth = localStorage.getItem('user') ? true : false;
+  const isAuth = localStorage.getItem('userItem') ? true : false;
 
   const router = createBrowserRouter([
     {
