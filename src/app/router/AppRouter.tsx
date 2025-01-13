@@ -44,7 +44,13 @@ const RouterComponent = observer(() => {
     },
   ]);
   return (
-    <Suspense fallback={<p>Loading...</p>}>
+    <Suspense
+      fallback={
+        <div className="w-full min-h-screen flex justify-center items-center">
+          <p>Loading...</p>
+        </div>
+      }
+    >
       <RouterProvider router={router} />
     </Suspense>
   );

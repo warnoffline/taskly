@@ -29,7 +29,7 @@ const TaskCard: React.FC<TaskProps> = observer(({ task }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
-  const { updateTask } = useTasksStore();
+  const { updateTask, removeTask } = useTasksStore();
 
   const {
     control,
@@ -57,6 +57,11 @@ const TaskCard: React.FC<TaskProps> = observer(({ task }) => {
       updateTask(task.id, data.message, backendFormatDate);
     }
     setIsEditing(false);
+  };
+
+  const handleDelete = async () => {
+    await removeTask(task.id);
+    setIsOpen(false);
   };
 
   const handleCancel = () => {
@@ -168,8 +173,13 @@ const TaskCard: React.FC<TaskProps> = observer(({ task }) => {
                 Изменить
               </Button>
               <DialogClose asChild>
-                <Button className="w-full border-blue-500 text-blue-500" type="button" variant="outline">
-                  Закрыть
+                <Button
+                  className="w-full border-red-500 text-red-500"
+                  type="button"
+                  variant="outline"
+                  onClick={handleDelete}
+                >
+                  Удалить
                 </Button>
               </DialogClose>
             </>
