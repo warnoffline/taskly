@@ -13,7 +13,7 @@ import {
 import { DialogTitle } from '@radix-ui/react-dialog';
 import { LucideChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTasksStore } from '../../useTasksStore';
 import { ru } from 'chrono-node';
 import { useForm, Controller } from 'react-hook-form';
@@ -27,6 +27,7 @@ const TaskCard: React.FC<TaskProps> = observer(({ task }) => {
   const dateTime = DateTime.fromFormat(task.date, 'yyyy-MM-dd HH:mm').setLocale('ru');
   const formattedDate = dateTime.toFormat('dd MMMM HH:mm');
   const [isEditing, setIsEditing] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const { updateTask } = useTasksStore();
 
@@ -62,8 +63,29 @@ const TaskCard: React.FC<TaskProps> = observer(({ task }) => {
     setIsEditing(false);
   };
 
+  useEffect(() => {
+    const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+    if (!metaThemeColor) return;
+
+    const currentTheme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+
+    const themeColor = isOpen
+      ? currentTheme === 'dark'
+        ? '#070707' // Цвет для открытого диалога в тёмной теме
+        : '#333333' // Цвет для открытого диалога в светлой теме
+      : currentTheme === 'dark'
+      ? '#242527' // Цвет для закрытого диалога в тёмной теме
+      : '#FFFFFF'; // Цвет для закрытого диалога в светлой теме
+
+    metaThemeColor.setAttribute('content', themeColor);
+
+    return () => {
+      metaThemeColor.setAttribute('content', currentTheme === 'dark' ? '#0F172A' : '#FFFFFF');
+    };
+  }, [isOpen]);
+
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <div className="cursor-pointer flex w-full items-center justify-between active:bg-blue-100 dark:active:bg-blue-950 dark:hover:bg-blue-950 hover:bg-blue-100">
           <div className="relative w-full flex gap-3">

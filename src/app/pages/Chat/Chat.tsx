@@ -7,6 +7,7 @@ import TasksList from './components/TasksList/TasksList';
 import { useToast } from '@/hooks/use-toast';
 import { useTasksStore } from './useTasksStore';
 import { useEffect } from 'react';
+import { Send } from 'lucide-react';
 
 const Chat = observer(() => {
   const { register, handleSubmit, reset, watch } = useForm({
@@ -46,7 +47,7 @@ const Chat = observer(() => {
         onSubmit={handleSubmit(onSubmit)}
       >
         <textarea
-          className="flex-1 border-none resize-none outline-none bg-chatLight-input dark:bg-chatDark-input rounded-lg px-3 py-3 text-sm"
+          className="flex-1 border-none resize-none outline-none bg-chatLight-header dark:bg-chatDark-header rounded-lg px-3 py-3 text-sm"
           rows={1}
           style={{
             maxHeight: '150px',
@@ -57,11 +58,11 @@ const Chat = observer(() => {
         />
         <button
           type="submit"
-          className={`bg-blue-500 text-white px-4 py-3 rounded-lg ${
+          className={`bg-blue-500 text-white px-4 py-3 rounded-full ${
             message.trim() ? 'opacity-100' : 'opacity-50 pointer-events-none'
           }`}
         >
-          Отправить
+          <Send />
         </button>
       </form>
     </div>
