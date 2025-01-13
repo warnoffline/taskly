@@ -8,7 +8,7 @@ import {
   updateEmail,
 } from 'firebase/auth';
 
-type PrivateFields = '_loading' | '_error' | '_user' | '_isAuthenticated';
+type PrivateFields = '_loading' | '_error' | '_uid' | '_user' | '_isAuthenticated';
 
 class UserStore {
   private _user: string = '';
@@ -21,13 +21,19 @@ class UserStore {
     makeObservable<UserStore, PrivateFields>(this, {
       _isAuthenticated: observable,
       _user: observable,
+      _uid: observable,
       _error: observable,
       _loading: observable,
       isAuthenticated: computed,
       error: computed,
       user: computed,
+      uid: computed,
       loading: computed,
       setError: action.bound,
+      setLoading: action.bound,
+      setUser: action.bound,
+      setUid: action.bound,
+      setAuthenticated: action.bound,
       signUp: action.bound,
       login: action.bound,
       logout: action.bound,
@@ -55,49 +61,63 @@ class UserStore {
     return this._isAuthenticated;
   }
 
-  setError(msg: string) {
+  setError(msg: string | null) {
     this._error = msg;
   }
 
+  setLoading(isLoading: boolean) {
+    this._loading = isLoading;
+  }
+
+  setUser(user: string) {
+    this._user = user;
+  }
+
+  setUid(uid: string) {
+    this._uid = uid;
+  }
+
+  setAuthenticated(isAuthenticated: boolean) {
+    this._isAuthenticated = isAuthenticated;
+  }
+
   async signUp(email: string, password: string): Promise<void> {
-    this._loading = true;
-    this._error = null;
+    this.setLoading(true);
+    this.setError(null);
     try {
       const user = await createUserWithEmailAndPassword(auth, email, password);
       runInAction(() => {
-        this._isAuthenticated = true;
-        this._user = email;
-        this._uid = user.user.uid;
+        this.setAuthenticated(true);
+        this.setUser(email);
+        this.setUid(user.user.uid);
       });
-
       this.saveToLocalStorage();
     } catch (err) {
       if (err instanceof Error) {
-        this.handleFirebaseError(err);
+        runInAction(() => this.handleFirebaseError(err));
       }
     } finally {
-      this._loading = false;
+      runInAction(() => this.setLoading(false));
     }
   }
 
   async login(email: string, password: string): Promise<void> {
-    this._loading = true;
-    this._error = null;
+    this.setLoading(true);
+    this.setError(null);
     try {
       const user = await signInWithEmailAndPassword(auth, email, password);
       runInAction(() => {
-        this._isAuthenticated = true;
-        this._user = email;
-        this._uid = user.user.uid;
+        this.setAuthenticated(true);
+        this.setUser(email);
+        this.setUid(user.user.uid);
       });
-
       this.saveToLocalStorage();
     } catch (err) {
       if (err instanceof Error) {
-        this.handleFirebaseError(err);
+        runInAction(() => this.handleFirebaseError(err));
       }
     } finally {
-      this._loading = false;
+      runInAction(() => this.setLoading(false));
     }
   }
 
@@ -107,13 +127,13 @@ class UserStore {
       if (user) {
         await updateEmail(user, newEmail);
         runInAction(() => {
-          this._user = newEmail;
+          this.setUser(newEmail);
         });
         this.saveToLocalStorage();
       }
     } catch (err) {
       if (err instanceof Error) {
-        this.handleFirebaseError(err);
+        runInAction(() => this.handleFirebaseError(err));
       }
     }
   }
@@ -121,13 +141,12 @@ class UserStore {
   async updatePassword(newPassword: string): Promise<void> {
     try {
       const user = auth.currentUser;
-      console.log(user);
       if (user) {
         await updatePassword(user, newPassword);
       }
     } catch (err) {
       if (err instanceof Error) {
-        this.handleFirebaseError(err);
+        runInAction(() => this.handleFirebaseError(err));
       }
     }
   }
@@ -136,14 +155,14 @@ class UserStore {
     try {
       await signOut(auth);
       runInAction(() => {
-        this._isAuthenticated = false;
-        this._user = '';
-        this._uid = '';
+        this.setAuthenticated(false);
+        this.setUser('');
+        this.setUid('');
       });
       this.removeFromLocalStorage();
     } catch (err) {
       if (err instanceof Error) {
-        this._error = `Logout failed: ${(err as Error).message}`;
+        runInAction(() => this.setError(`Logout failed: ${err.message}`));
       }
     }
   }
@@ -152,22 +171,21 @@ class UserStore {
     const errorMessage = err.message;
 
     if (errorMessage.includes('auth/invalid-credential')) {
-      this._error =
-        'The provided credentials are invalid. Please check your login details or try using a different login method.';
+      this.setError('The provided credentials are invalid.');
     } else if (errorMessage.includes('auth/email-already-in-use')) {
-      this._error = 'This email is already in use. Please use a different email.';
+      this.setError('This email is already in use.');
     } else if (errorMessage.includes('auth/invalid-email')) {
-      this._error = 'The email address is not valid. Please check your email.';
+      this.setError('The email address is not valid.');
     } else if (errorMessage.includes('auth/wrong-password')) {
-      this._error = 'Incorrect password. Please try again.';
+      this.setError('Incorrect password.');
     } else if (errorMessage.includes('auth/user-not-found')) {
-      this._error = 'No user found with this email address.';
+      this.setError('No user found with this email address.');
     } else if (errorMessage.includes('auth/weak-password')) {
-      this._error = 'Password is too weak. Please use a stronger password.';
+      this.setError('Password is too weak.');
     } else if (errorMessage.includes('auth/missing-email')) {
-      this._error = 'Email is required.';
+      this.setError('Email is required.');
     } else {
-      this._error = `An unknown error occurred: ${errorMessage}`;
+      this.setError(`An unknown error occurred: ${errorMessage}`);
     }
   }
 
@@ -183,9 +201,9 @@ class UserStore {
     const userData = localStorage.getItem('userItem');
     const savedData = userData && JSON.parse(userData);
     if (savedData) {
-      this._user = savedData.user;
-      this._uid = savedData.uid;
-      this._isAuthenticated = true;
+      this.setUser(savedData.user);
+      this.setUid(savedData.uid);
+      this.setAuthenticated(true);
     }
   }
 

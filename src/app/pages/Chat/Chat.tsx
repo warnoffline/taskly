@@ -43,7 +43,7 @@ const Chat = observer(() => {
     <div>
       <TasksList />
       <form
-        className="fixed bottom-0 w-full bg-chatLight-header dark:bg-chatDark-header px-4 py-2 flex items-center gap-2 border-t border-gray-300"
+        className="fixed bottom-0 w-full bg-chatLight-header dark:bg-chatDark-header px-4 py-1 flex items-center gap-2 border-t border-gray-300"
         onSubmit={handleSubmit(onSubmit)}
       >
         <textarea
@@ -58,7 +58,7 @@ const Chat = observer(() => {
         />
         <button
           type="submit"
-          className={`bg-blue-500 text-white px-4 py-3 rounded-full ${
+          className={`bg-blue-500 text-white px-3 py-2 rounded-full ${
             message.trim() ? 'opacity-100' : 'opacity-50 pointer-events-none'
           }`}
         >

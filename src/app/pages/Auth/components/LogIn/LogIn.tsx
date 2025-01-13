@@ -2,21 +2,26 @@ import { useNavigate } from 'react-router-dom';
 import Form from '../Form';
 import { useUserStore } from '@/store/RootStore';
 import { observer } from 'mobx-react-lite';
-import { useEffect } from 'react';
+import { useState } from 'react';
 
 const LogIn: React.FC = observer(() => {
-  const { login, isAuthenticated, loading } = useUserStore();
+  const { login } = useUserStore();
+  const [isNavigating, setIsNavigating] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (email: string, password: string) => {
-    await login(email, password);
-  };
+    if (isNavigating) return;
 
-  useEffect(() => {
-    if (isAuthenticated && !loading) {
-      navigate('/profile');
+    setIsNavigating(true);
+    try {
+      await login(email, password);
+      navigate('/chat');
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsNavigating(false);
     }
-  }, [isAuthenticated, navigate, loading]);
+  };
 
   return <Form title="Вход" handleClick={handleLogin} />;
 });

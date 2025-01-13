@@ -78,10 +78,6 @@ const TaskCard: React.FC<TaskProps> = observer(({ task }) => {
       : '#FFFFFF'; // Цвет для закрытого диалога в светлой теме
 
     metaThemeColor.setAttribute('content', themeColor);
-
-    return () => {
-      metaThemeColor.setAttribute('content', currentTheme === 'dark' ? '#0F172A' : '#FFFFFF');
-    };
   }, [isOpen]);
 
   return (

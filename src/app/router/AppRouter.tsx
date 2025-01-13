@@ -4,9 +4,11 @@ import { ROUTES } from '@/configs/routeConfig';
 import { Suspense } from 'react';
 import { AuthLazy, ChatLazy, ProfileLazy, SettingsLazy } from '../pages';
 import ProtectedRoute from './ProtectedRoute';
+import { useUserStore } from '@/store/RootStore';
+import { observer } from 'mobx-react-lite';
 
-const RouterComponent = () => {
-  const isAuth = localStorage.getItem('userItem') ? true : false;
+const RouterComponent = observer(() => {
+  const { isAuthenticated } = useUserStore();
 
   const router = createBrowserRouter([
     {
@@ -30,7 +32,7 @@ const RouterComponent = () => {
           element: <AuthLazy />,
         },
         {
-          element: <ProtectedRoute isAuthenticated={isAuth} />,
+          element: <ProtectedRoute isAuthenticated={isAuthenticated} />,
           children: [
             {
               path: ROUTES.profile,
@@ -46,6 +48,6 @@ const RouterComponent = () => {
       <RouterProvider router={router} />
     </Suspense>
   );
-};
+});
 
 export default RouterComponent;
