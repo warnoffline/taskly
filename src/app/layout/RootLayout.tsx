@@ -13,7 +13,7 @@ const RootLayout = () => {
     const themeColor = currentTheme === 'dark' ? '#242527' : '#FFFFFF';
 
     metaThemeColor.setAttribute('content', themeColor);
-  });
+  }, []);
 
   return (
     <div className="min-h-screen bg-chatLight-bg dark:bg-chatDark-bg">

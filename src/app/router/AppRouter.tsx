@@ -20,14 +20,6 @@ const RouterComponent = observer(() => {
           element: <Navigate to={ROUTES.chat} replace />,
         },
         {
-          path: ROUTES.chat,
-          element: <ChatLazy />,
-        },
-        {
-          path: ROUTES.settings,
-          element: <SettingsLazy />,
-        },
-        {
           path: ROUTES.auth,
           element: <AuthLazy />,
         },
@@ -37,6 +29,14 @@ const RouterComponent = observer(() => {
             {
               path: ROUTES.profile,
               element: <ProfileLazy />,
+            },
+            {
+              path: ROUTES.chat,
+              element: <ChatLazy />,
+            },
+            {
+              path: ROUTES.settings,
+              element: <SettingsLazy />,
             },
           ],
         },
