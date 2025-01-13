@@ -25,11 +25,14 @@ class TasksStore implements ILocalStore {
       loading: observable,
       error: observable,
       sortedTasks: computed,
+      hasExpiredTasks: computed,
       fetchTasks: action.bound,
       addTask: action.bound,
       updateTask: action.bound,
       removeTask: action.bound,
+      removeExpiredTasks: action.bound,
       toggleTaskCompletion: action.bound,
+      isDatePassed: action.bound,
     });
     this.loadFromLocalStorage();
   }
@@ -46,6 +49,10 @@ class TasksStore implements ILocalStore {
       const dateB = DateTime.fromFormat(b.date, 'yyyy-MM-dd HH:mm');
       return dateA < dateB ? -1 : 1;
     });
+  }
+
+  get hasExpiredTasks(): boolean {
+    return this.tasks.some((task) => this.isDatePassed(task.date));
   }
 
   // Загрузка задач с Firestore
@@ -75,7 +82,8 @@ class TasksStore implements ILocalStore {
       });
 
       runInAction(() => {
-        this.tasks = fetchedTasks.filter((task) => !this.isDatePassed(task.date));
+        this.tasks = fetchedTasks;
+        this.tasks = this.sortedTasks;
       });
     } catch (err) {
       if (err instanceof Error) {
@@ -132,6 +140,7 @@ class TasksStore implements ILocalStore {
         await setDoc(taskRef, newTask); // Добавляем задачу в Firestore
         runInAction(() => {
           this.tasks.push(newTask);
+          this.tasks = this.sortedTasks;
         });
       } catch (err) {
         if (err instanceof Error) {
@@ -166,6 +175,39 @@ class TasksStore implements ILocalStore {
       if (err instanceof Error) {
         runInAction(() => {
           this.error = `Failed to remove task: ${err.message}`;
+        });
+      }
+    }
+  }
+
+  async removeExpiredTasks(): Promise<void> {
+    const userId = this._uid;
+    if (!userId) {
+      this.error = 'User is not authenticated';
+      return;
+    }
+
+    try {
+      const expiredTasks = this.tasks.filter((task) => this.isDatePassed(task.date));
+      if (expiredTasks.length > 0) {
+        const userDocRef = doc(db, 'users', userId); // Документ пользователя
+        const tasksRef = collection(userDocRef, 'tasks'); // Коллекция задач
+
+        // Удаляем все просроченные задачи
+        for (const task of expiredTasks) {
+          const taskRef = doc(tasksRef, task.id); // Документ задачи
+          await deleteDoc(taskRef); // Удаляем задачу из Firestore
+        }
+
+        // Обновляем локальное состояние
+        runInAction(() => {
+          this.tasks = this.tasks.filter((task) => !this.isDatePassed(task.date));
+        });
+      }
+    } catch (err) {
+      if (err instanceof Error) {
+        runInAction(() => {
+          this.error = `Failed to remove expired tasks: ${err.message}`;
         });
       }
     }
@@ -220,7 +262,7 @@ class TasksStore implements ILocalStore {
   }
 
   // Проверка, прошла ли дата
-  private isDatePassed(date: string): boolean {
+  isDatePassed(date: string): boolean {
     const taskDate = DateTime.fromFormat(date, 'yyyy-MM-dd HH:mm');
     return taskDate < DateTime.local();
   }

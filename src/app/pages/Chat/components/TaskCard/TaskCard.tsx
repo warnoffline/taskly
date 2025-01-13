@@ -29,7 +29,7 @@ const TaskCard: React.FC<TaskProps> = observer(({ task }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
-  const { updateTask, removeTask } = useTasksStore();
+  const { updateTask, removeTask, isDatePassed } = useTasksStore();
 
   const {
     control,
@@ -88,7 +88,11 @@ const TaskCard: React.FC<TaskProps> = observer(({ task }) => {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <div className="cursor-pointer flex w-full items-center justify-between active:bg-blue-100 dark:active:bg-blue-950 dark:hover:bg-blue-950 hover:bg-blue-100">
+        <div
+          className={`cursor-pointer ${
+            isDatePassed(task.date) && 'bg-red-200 dark:bg-red-950'
+          } flex w-full items-center rounded-md justify-between active:bg-blue-100 dark:active:bg-blue-950 dark:hover:bg-blue-950 hover:bg-blue-100`}
+        >
           <div className="relative w-full flex gap-3">
             <div className="w-1 bg-blue-500"></div>
             <div className="flex flex-col">
