@@ -2,10 +2,10 @@ import { useNavigate } from 'react-router-dom';
 import Form from '../Form';
 import { useUserStore } from '@/store/RootStore';
 import { observer } from 'mobx-react-lite';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const SignUp: React.FC = observer(() => {
-  const { signUp } = useUserStore();
+  const { signUp, isAuthenticated } = useUserStore();
   const [isNavigating, setIsNavigating] = useState(false);
   const navigate = useNavigate();
 
@@ -15,13 +15,18 @@ const SignUp: React.FC = observer(() => {
     setIsNavigating(true);
     try {
       await signUp(email, password);
-      navigate('/chat');
     } catch (e) {
       console.error(e);
     } finally {
       setIsNavigating(false);
     }
   };
+
+  useEffect(() => {
+    if (!isNavigating && isAuthenticated) {
+      navigate('/chat');
+    }
+  }, [isNavigating, isAuthenticated, navigate]);
 
   return <Form title="Регистрация" handleClick={handleSignUp} />;
 });
