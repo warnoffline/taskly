@@ -9,16 +9,16 @@ const TasksList = observer(() => {
   return (
     <div className="w-full flex flex-col items-center justify-center">
       {hasExpiredTasks && (
-        <div className="self-end px-2 py-2">
+        <div className="self-end px-2 pt-2">
           <Button
             onClick={removeExpiredTasks}
-            className="bg-chatLight-bg dark:bg-chatDark-bg shadow-none dark:text-white"
+            className="bg-chatLight-bg dark:bg-chatDark-bg shadow-none text-black dark:text-white"
           >
             Очистить
           </Button>
         </div>
       )}
-      <div className="w-center flex flex-col gap-5 pt-4 pb-20">
+      <div className="w-center flex flex-col gap-2 pt-2 pb-20">
         {tasks.map((task) => (
           <TaskCard key={task.id} task={task} />
         ))}

@@ -11,7 +11,6 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { DialogTitle } from '@radix-ui/react-dialog';
-import { LucideChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import React, { useEffect, useState } from 'react';
 import { useTasksStore } from '../../useTasksStore';
@@ -30,6 +29,7 @@ const TaskCard: React.FC<TaskProps> = observer(({ task }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const { updateTask, removeTask, isDatePassed } = useTasksStore();
+  const isPassed = isDatePassed(task.date);
 
   const {
     control,
@@ -88,21 +88,35 @@ const TaskCard: React.FC<TaskProps> = observer(({ task }) => {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <div
-          className={`cursor-pointer ${
-            isDatePassed(task.date) && 'bg-red-200 dark:bg-red-950'
-          } flex w-full items-center rounded-md justify-between active:bg-blue-100 dark:active:bg-blue-950 dark:hover:bg-blue-950 hover:bg-blue-100`}
-        >
-          <div className="relative w-full flex gap-3">
-            <div className="w-1 bg-blue-500"></div>
-            <div className="flex flex-col">
-              <div className="text-sm text-blue-500">{formattedDate}</div>
+        <div className={`cursor-pointer flex w-full items-center rounded-md justify-between`}>
+          <div className="relative w-full flex gap-3 px-2">
+            <div className="flex flex-col items-center gap-1">
+              <div className={`border-blue-500 border-2 w-4 h-4 rounded-full ${isPassed && 'bg-blue-500'}`}>
+                <div className="w-3 h-3 rounded-full border-chatLight-bg dark:border-chatDark-bg border-2"></div>
+              </div>
+              <div className="bg-blue-500 w-0.5 h-full"></div>
+            </div>
+            <div
+              className={`w-full flex flex-col active:bg-blue-100 dark:active:bg-blue-950 dark:hover:bg-blue-950 hover:bg-blue-100 ${
+                isPassed ? 'bg-blue-500/40 dark:bg-blue-500/50' : 'bg-chatLight-card dark:bg-chatDark-card'
+              }
+              py-2 px-4 rounded-xl
+              `}
+            >
+              <div
+                className={`text-lg font-semibold ${
+                  isPassed ? 'text-blue-800 dark:text-blue-200' : 'text-blue-500 dark:text-chatDark-secondaryText'
+                }`}
+              >
+                {formattedDate}
+              </div>
               <div className="text-lg text-chatLight-text dark:text-chatDark-text">
-                <div className="w-full max-w-xs truncate overflow-hidden whitespace-nowrap">{task.message}</div>
+                <div className="w-full max-w-xs truncate overflow-hidden whitespace-nowrap font-semibold text-base">
+                  {task.message}
+                </div>
               </div>
             </div>
           </div>
-          <LucideChevronRight />
         </div>
       </DialogTrigger>
       <DialogContent className="max-w-sm">

@@ -19,6 +19,8 @@ export default {
           bubbleOutgoing: '#D1FAE5', // Исходящие сообщения
           text: '#1F2937', // Основной текст
           secondaryText: '#6B7280', // Вторичный текст
+          card: '#EFF1FE',
+          passed: '#C0392B',
         },
         chatDark: {
           bg: '#18191A', // Фон чата
@@ -28,6 +30,8 @@ export default {
           bubbleOutgoing: '#3D7256', // Исходящие сообщения
           text: '#E4E4E7', // Основной текст
           secondaryText: '#A3A3A6', // Вторичный текст
+          card: '#2C2F33',
+          passed: '#2C3E50',
         },
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
