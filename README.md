@@ -1,50 +1,75 @@
-# React + TypeScript + Vite
+# Taskly - task reminder
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## О приложении
 
-Currently, two official plugins are available:
+В условиях соверменного мира, где управление временем и задачами требует особого внимания - удобное приложение-напоминалка будет отличным дополнением к вашему тайм-менеджменту.
+Преимуществами этого приложения является максимальная простота использования, специализация на напоминаниях, упрощённый ввод. 
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Приложение обрабатывает любой формат ввода даты и времени:
+- 12:30 
+- Через час
+- Пять часов тридцать минут
+- Завтра в 10 утра
+- В понедельник в пять часов
 
-## Expanding the ESLint configuration
+## Описание
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+Сайт написан на `React TypeScript`. Использован `react-router-dom` для роутинга, `MobX` в качестве state-manager'а и реализации запросов к API. Также для реализации запросов была использована библиотека `axios`. Для облегчения написания стилей использован `TailwindCSS` и UI-библиотека `shadcn/ui`. Сборщик модулей - `Vite`. База данных и отправление уведомлений реализованы с помощью `firebase`. Также была реализована технология `PWA` для большей 'нативности' на телефонах.
 
-- Configure the top-level `parserOptions` property like this:
+### Технические плюшки
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+- Реализован сетап проекта с подключенным линтером, алиасами
+- В проекте соблюдена структура
+- Реализована страница списка сущностей с получением данных из FIREBASE
+- Изменение сущности через модальное окно
+- Подключен роутинг
+- Вся логика работы с данными прописана с помощью Mobx
+- Разделены сторы и выбрана "локальность" каждого из них
+- Настроены ServiceWorker'ы
+
+### Функционал
+
+- Реализованы авторизация и регистрация, защищённые маршруты.
+
+- Страница профиля с возможностью изменения пароля.
+
+- Страница настроек с возможностью изменения темы приложения.
+
+- Страница напоминалок. Возможность добавить, изменить или удалить напоминалку. Прошедшие напоминалки помечаются красным цветом и есть возможность очистить список прошедших напоминалок или поменять время напоминалки.
+
+- Уведомления о задачке. Когда время задачки приходит - на устройство высылается уведомление.
+
+## Локальный запуск
+
+### Предварительные требования
+
+Перед началом убедитесь, что у вас установлены следующие инструменты:
+
+- [Node.js](https://nodejs.org/en)
+- [Yarn](https://classic.yarnpkg.com/)
+- [Git](https://git-scm.com/downloads)
+
+### Установка репозитория
+
+Скопируйте и запустите команды в директории, откуда вы планируете запустить проект.
+
+```bash
+git clone https://github.com/warnoffline/taskly
+cd taskly
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+### Запуск локального dev-сервера
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+Для установки зависимостей: 
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+```bash
+yarn install
 ```
+
+Для запуска локального сервера: 
+
+```bash
+yarn dev
+```
+
+Данная команда запустит локальный сервер `localhost` на `5173` порте
