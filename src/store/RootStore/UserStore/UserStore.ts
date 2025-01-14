@@ -211,6 +211,7 @@ class UserStore {
 
   private removeFromLocalStorage(): void {
     localStorage.removeItem('userItem');
+    localStorage.removeItem('token');
   }
 }
 

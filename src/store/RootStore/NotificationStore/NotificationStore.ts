@@ -31,8 +31,11 @@ class NotificationStore {
   requestNotificationToken = async (): Promise<NotificationPermission> => {
     try {
       const permissionStatus = await navigator.permissions.query({ name: 'notifications' });
+      await this.loadFromLocalStorage();
 
-      if (permissionStatus.state === 'prompt' || permissionStatus.state === 'denied') {
+      if (permissionStatus.state === 'granted') {
+        await this.generateToken();
+      } else {
         const permission = await Notification.requestPermission();
         if (permission === 'granted') {
           await this.generateToken();
@@ -40,8 +43,6 @@ class NotificationStore {
           console.log('Notifications permission was denied.');
         }
         return permission;
-      } else if (permissionStatus.state === 'granted') {
-        await this.generateToken();
       }
       return permissionStatus.state;
     } catch (error) {
