@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 
 const SignUp: React.FC = observer(() => {
   const { signUp, isAuthenticated } = useUserStore();
-  const [isNavigating, setIsNavigating] = useState(false);
+  const [isNavigating, setIsNavigating] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const handleSignUp = async (email: string, password: string) => {

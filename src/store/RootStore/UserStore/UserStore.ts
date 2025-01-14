@@ -91,6 +91,7 @@ class UserStore {
         this.setUser(email);
         this.setUid(user.user.uid);
       });
+
       this.saveToLocalStorage();
     } catch (err) {
       if (err instanceof Error) {
@@ -111,6 +112,7 @@ class UserStore {
         this.setUser(email);
         this.setUid(user.user.uid);
       });
+
       this.saveToLocalStorage();
     } catch (err) {
       if (err instanceof Error) {
