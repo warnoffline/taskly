@@ -69,6 +69,7 @@ body {
   }
   body {
     @apply bg-background text-foreground;
+    overflow: hidden;
   }
 }
 
@@ -79,4 +80,11 @@ body {
 .title {
   font-size: 32px;
   font-weight: 600;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }

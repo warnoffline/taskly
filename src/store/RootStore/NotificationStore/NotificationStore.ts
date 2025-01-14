@@ -13,7 +13,7 @@ class NotificationStore {
     makeObservable<NotificationStore, PrivateFields>(this, {
       _uid: observable,
       uid: computed,
-      generateToken: action.bound,
+      requestNotificationToken: action.bound,
     });
     this.loadFromLocalStorage();
   }
@@ -22,27 +22,53 @@ class NotificationStore {
     return this._uid;
   }
 
-  async generateToken() {
-    const permission = await Notification.requestPermission();
-    if (permission === 'granted' && this._uid) {
-      const token = await getToken(messaging, {
-        vapidKey,
-      });
-      localStorage.setItem('token', token);
-      axios
-        .post(`${apiBaseUrl}/saveToken`, {
-          token,
-          userId: this._uid,
-        })
-        .then(() => {
-          console.log('Token saved successfully');
-        })
-        .catch((error) => {
-          console.error('Error saving token:', error);
-        });
-      return token;
+  requestNotificationToken = async () => {
+    try {
+      const permissionStatus = await navigator.permissions.query({ name: 'notifications' });
+
+      if (permissionStatus.state === 'granted') {
+        await this.generateToken();
+      } else if (permissionStatus.state === 'prompt') {
+        const permission = await Notification.requestPermission();
+        if (permission === 'granted') {
+          await this.generateToken();
+        } else {
+          console.log('Notifications permission was denied.');
+        }
+      } else {
+        console.log('Notifications permission denied. Ask user to enable it in browser settings.');
+      }
+    } catch (error) {
+      console.error('Error while requesting notification permission:', error);
     }
-  }
+  };
+
+  private generateToken = async () => {
+    try {
+      if (this._uid) {
+        const token = await getToken(messaging, {
+          vapidKey,
+        });
+        localStorage.setItem('token', token);
+
+        try {
+          await axios.post(`${apiBaseUrl}/saveToken`, {
+            token,
+            userId: this._uid,
+          });
+          console.log('Token saved successfully');
+        } catch (error) {
+          console.error('Error saving token:', error);
+        }
+
+        return token;
+      } else {
+        console.error('User ID is missing. Cannot generate token.');
+      }
+    } catch (error) {
+      console.error('Error generating token:', error);
+    }
+  };
 
   private loadFromLocalStorage(): void {
     const userData = localStorage.getItem('userItem');

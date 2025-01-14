@@ -7,13 +7,13 @@ import { observer } from 'mobx-react-lite';
 
 const App = observer(() => {
   const { isAuthenticated } = useUserStore();
-  const { generateToken } = useNotificationStore();
+  const { requestNotificationToken } = useNotificationStore();
 
   useEffect(() => {
     if (isAuthenticated) {
-      generateToken();
+      requestNotificationToken();
     }
-  }, [generateToken, isAuthenticated]);
+  }, [requestNotificationToken, isAuthenticated]);
 
   return (
     <RootStoreProvider>

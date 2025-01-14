@@ -68,10 +68,8 @@ const Form: React.FC<FormProps> = observer(({ title, handleClick }) => {
         {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
       </div>
 
-      {/* Error Message */}
       {error && <p className="text-red-500 text-sm text-center">{error}</p>}
 
-      {/* Submit Button */}
       <button
         disabled={loading}
         type="submit"

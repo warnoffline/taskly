@@ -6,6 +6,7 @@ import { AuthLazy, ChatLazy, ProfileLazy, SettingsLazy } from '../pages';
 import ProtectedRoute from './ProtectedRoute';
 import { useUserStore } from '@/store/RootStore';
 import { observer } from 'mobx-react-lite';
+import { Loader } from 'lucide-react';
 
 const RouterComponent = observer(() => {
   const { isAuthenticated } = useUserStore();
@@ -47,7 +48,7 @@ const RouterComponent = observer(() => {
     <Suspense
       fallback={
         <div className="w-full min-h-screen flex justify-center items-center">
-          <p>Loading...</p>
+          <Loader className="w-10 h-10 animate-spin" />
         </div>
       }
     >
