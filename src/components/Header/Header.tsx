@@ -3,7 +3,7 @@ import { AlarmClockCheckIcon, SettingsIcon, UserIcon } from 'lucide-react';
 
 const Header = () => {
   const getNavLinkClass = ({ isActive }: { isActive: boolean }) =>
-    `transition-colors hover:stroke-blue-500 active:stroke-blue-700 ${isActive ? 'stroke-blue-700' : ''}`;
+    `transition-colors hover:stroke-blue-500 active:stroke-blue-700 ${isActive ? 'stroke-blue-500' : ''}`;
 
   return (
     <div className="w-full flex justify-center sticky top-0 bg-chatLight-header dark:bg-chatDark-header z-10 border-b py-1 border-gray-300">

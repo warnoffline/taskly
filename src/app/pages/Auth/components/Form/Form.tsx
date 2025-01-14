@@ -36,7 +36,7 @@ const Form: React.FC<FormProps> = observer(({ title, handleClick }) => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="max-w-md bg-chatLight-bg dark:bg-chatDark-bg shadow-md rounded-lg p-6 space-y-6 text-start"
+      className="w-full bg-chatLight-bg dark:bg-chatDark-bg shadow-md rounded-lg p-6 space-y-6 text-start"
     >
       <h2 className="text-2xl font-semibold text-chatLight-text dark:text-chatDark-text text-center">{title}</h2>
 

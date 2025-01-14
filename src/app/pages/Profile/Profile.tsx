@@ -83,11 +83,14 @@ const Profile = observer(() => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-2 px-4 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:bg-indigo-400"
+              className="w-full py-2 px-4 bg-blue-500 dark:bg-blue-500/75 text-white rounded-md hover:bg-indigo-700 disabled:bg-indigo-400"
             >
               {loading ? 'Changing...' : 'Сохранить'}
             </button>
-            <button className="w-full py-2 px-4 bg-red-500 rounded-md text-white" onClick={handleLogout}>
+            <button
+              className="w-full py-2 px-4 bg-red-500 dark:bg-red-500/75 rounded-md text-white"
+              onClick={handleLogout}
+            >
               Выход
             </button>
           </div>

@@ -3,16 +3,17 @@ import RouterComponent from './router';
 import { RootStoreProvider, useNotificationStore } from '@/store/RootStore';
 import { useUserStore } from '@/store/RootStore';
 import { ThemeProvider } from './providers/ThemeContext';
+import { observer } from 'mobx-react-lite';
 
-function App() {
-  const { uid } = useUserStore();
+const App = observer(() => {
+  const { isAuthenticated } = useUserStore();
   const { generateToken } = useNotificationStore();
 
   useEffect(() => {
-    if (uid) {
+    if (isAuthenticated) {
       generateToken();
     }
-  }, [generateToken, uid]);
+  }, [generateToken, isAuthenticated]);
 
   return (
     <RootStoreProvider>
@@ -21,6 +22,6 @@ function App() {
       </ThemeProvider>
     </RootStoreProvider>
   );
-}
+});
 
 export default App;

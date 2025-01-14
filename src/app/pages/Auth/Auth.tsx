@@ -14,7 +14,7 @@ const Auth: React.FC = observer(() => {
   }, [isLogIn, setError]);
 
   return (
-    <div className="text-center flex flex-col w-100 gap-2 p-5">
+    <div className="text-center flex flex-col items-center w-100 gap-2 p-5">
       {isLogIn ? <LogIn /> : <SignUp />}
       <div>
         <p>{isLogIn ? `Ещё нет аккаунта?` : 'Уже есть аккаунт?'}</p>
