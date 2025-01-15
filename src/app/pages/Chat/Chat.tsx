@@ -59,7 +59,7 @@ const Chat = observer(() => {
         <button
           type="submit"
           className={`px-3 py-2 rounded-full rotate-45 ${
-            message.trim() ? 'opacity-100 text-blue-500' : 'text-white opacity-50 pointer-events-none'
+            message.trim() ? 'opacity-100 text-blue-500' : 'text-gray-400 opacity-50 pointer-events-none'
           }`}
         >
           <Send />
